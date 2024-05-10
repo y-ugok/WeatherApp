@@ -16,8 +16,6 @@ PetiteVue.createApp({
       func: "forecast",
       q: this.cityname,
     });
-    /* Deno DeployのURLに合わせてここを修正 */
-    // const res = await fetch("http://localhost:8000?" + query);
     const res = await fetch("https://weatherforecast-app.deno.dev/?" + query);
     
     const data = await res.json();
@@ -126,8 +124,6 @@ PetiteVue.createApp({
     });
 
     const res = await fetch(
-      /* Deno DeployのURLに合わせてここを修正 */
-      // "http://localhost:8000?" + query
       "https://weatherforecast-app.deno.dev/?" + query
     );
     this.areaobj = await res.json();
