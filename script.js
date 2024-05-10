@@ -34,8 +34,6 @@ PetiteVue.createApp({
     this.data = {};
     for (const d of data.list) {
       const date = d.dt_txt.split(" ");
-      //毎回日付と時間をデータとして格納する
-      //const data=["2024-02-01","06:00:00"]
       const val = {};
 
       val.time = date[1]; //06:00:00とかの部分だけ取得
