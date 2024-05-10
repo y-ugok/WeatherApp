@@ -17,7 +17,9 @@ PetiteVue.createApp({
       q: this.cityname,
     });
     /* Deno DeployのURLに合わせてここを修正 */
-    const res = await fetch("http://localhost:8000?" + query);
+    // const res = await fetch("http://localhost:8000?" + query);
+    const res = await fetch("https://weatherforecast-app.deno.dev/?" + query);
+    
     const data = await res.json();
     console.log(JSON.stringify(data), null, 2);
     //JSON.stringifyメソッドはJavaScriptのオブジェクトをJSON形式の文字列に変換する用途で使われる
@@ -125,7 +127,8 @@ PetiteVue.createApp({
 
     const res = await fetch(
       /* Deno DeployのURLに合わせてここを修正 */
-      "http://localhost:8000?" + query
+      // "http://localhost:8000?" + query
+      "https://weatherforecast-app.deno.dev/?" + query
     );
     this.areaobj = await res.json();
   },
