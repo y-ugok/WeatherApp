@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
 
   return new Response(body, {
     headers: {
-      // 'Access-Control-Allow-Origin': '*', // ここも忘れずに修正
+      // 'Access-Control-Allow-Origin': '*', 
       'Access-Control-Allow-Origin': 'https://y-ugok.github.io',
       'content-type': 'application/json; charset=utf-8',
     },
