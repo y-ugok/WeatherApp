@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>天気</title>
+    <script defer src="https://unpkg.com/petite-vue"></script>
+    <script defer src="script.js"></script>
+    <style>
+      html {
+        overflow-y: scroll;
+      }
+      body {
+        margin: 0;
+        background-image: url(./img/sky_01.jpg);
+        background-size: cover;
+        background-attachment: fixed;
+        /* 背景を固定する */
+        text-align: center;
+      }
+      header {
+        width: 100%;
+        height: 50px;
+        background-color: #0059c0a3;
+        top: 0;
+        left: 0;
+      }
+      main {
+        width: 80%;
+        margin: 0 auto;
+      }
+      #weatherData {
+        margin: 0;
+      }
+      #weatherData table {
+        border-radius: 20px;
+        width: 100%;
+        table-layout: fixed;
+        background-color: beige;
+        margin: 0;
+        border-collapse: collapse;
+        padding: 20px;
+      }
+      select {
+        width: 60%;
+      }
+      table,
+      td {
+        border: none;
+        text-align: center;
+      }
+      tr {
+        border-bottom: 1px #03a7ff solid;
+      }
+      table tr:last-child {
+        border: none;
+      }
+      table:last-child {
+        margin-bottom: 35px;
+      }
+      td img {
+        width: 3em;
+        height: 100%;
+      }
+      #weatherData {
+        margin: 0 auto;
+        text-align: center;
+        display: none;
+      }
+      #weatherData p {
+        text-align: left;
+      }
+      table {
+        text-align: left;
+      }
+
+      header h3 {
+        margin-top: 0;
+        padding: 15px;
+      }
+
+      #form {
+        padding: 10px 0;
+        width: 60%;
+        margin-bottom: 20px;
+      }
+      td > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      select {
+        font-size: 1em;
+        text-align: center;
+      }
+      option {
+        font-size: 1em;
+      }
+      button {
+        font-size: 1em;
+        padding: 7px 24px;
+      }
+      img:first-of-type {
+        width: 30%;
+      }
+      #weatherData > div {
+        margin-top: 40px;
+      }
+      img:first-of-type {
+        width: 30%;
+      }
+      .message {
+        display: flex;
+        width: 50%;
+        justify-content: space-between;
+        margin: 0 auto;
+      }
+      .message p {
+        margin-top: 0;
+      }
+      .block1 {
+        width: 100%;
+        border: solid 10px rgb(231, 237, 255);
+        margin: 50px auto 45px;
+      }
+      /* 上に戻るボタンのデザイン */
+      #pageTopBtn {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-style: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.5s;
+      }
+      #pageTopBtn:link {
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+      #pageTopBtn:visited {
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+      #pageTopBtn:hover {
+        background-color: rgba(224, 224, 224, 0.8);
+      }
+      /* ボタンホバー時 */
+      #pageTopBtn:active {
+        background-color: rgba(0, 120, 226, 0.8);
+      }
+      /* ボタンの矢印 */
+      #pageTopBtn::before {
+        position: absolute;
+        content: "";
+        top: 50%;
+        left: 28px;
+        width: 2px;
+        height: 12px;
+        background-color: #222;
+        transition: all 0.5s;
+        transform: translateY(-50%) rotate(-45deg);
+      }
+      #pageTopBtn::after {
+        position: absolute;
+        content: "";
+        top: 50%;
+        right: 28px;
+        width: 2px;
+        height: 12px;
+        background-color: #222;
+        transition: all 0.5s;
+        transform: translateY(-50%) rotate(45deg);
+      }
+      .example {
+        display: block;
+        width: 150px;
+        background: #00b6f3;
+        color: #0059ff;
+        padding: 10px;
+        box-sizing: border-box;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 30px;
+        margin: 20px auto;
+      }
+      .example:active {
+        background: #c0e4fa;
+        color: #fff;
+      }
+      #weatherData table {
+        width: 100%;
+      }
+      main {
+        width: 50%;
+        margin: 0 auto;
+      }
+
+      p:has(+ table) {
+        color: rgb(255, 255, 255);
+      }
+      .large {
+        font-size: 1.8em;
+      }
+      .block1 + p {
+        font-size: 1.2em;
+      }
+      .today-weather {
+        width: 10em;
+        color: rgb(255, 255, 255);
+        margin: 0 auto 200px auto;
+      }
+      .block1 > p {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+      }
+      footer {
+        margin-bottom: 100px;
+      }
+      .block p:first-child {
+        border-bottom: solid 1px rgb(47, 250, 138);
+      }
+      [v-cloak] {
+        display: none;
+      }
+      #data1 {
+        display: none;
+      }
+    </style>
+  </head>
+  <body @vue:mounted="getProgramList" id="body">
+    <header></header>
+    <!-- データが空オブジェクトでは無い時だけ -->
+    <main v-if="Object.keys(data).length >= 6">
+      <div id="data1" v-cloak>
+        <div
+          class="block1"
+          v-if="areaobj && areaobj.weather && areaobj.weather[0]"
+        >
+          <p>{{areaobj.name}}</p>
+          <div v-if="areaobj.weather[0].main === 'Clear'">
+            <img src="./img/sun.png" />
+          </div>
+          <div v-else-if="areaobj.weather[0].main === 'Clouds'">
+            <img src="./img/cloud.png" />
+          </div>
+          <div v-else-if="areaobj.weather[0].main === 'Rain'">
+            <img src="./img/rain.png" />
+          </div>
+          <div v-else-if="areaobj.weather[0].main === 'Snow'">
+            <img src="./img/snow.png" />
+          </div>
+          <div v-else-if="areaobj.weather[0].main === 'Mist'">
+            <img src="./img/mist.png" />
+          </div>
+          <p class="today-weather">
+            現在の天気：{{areaobj.weather[0].description}}
+          </p>
+          <div class="message">
+            <p>気温：{{formatTempl(areaobj.main.temp)}}</p>
+            <p>湿度：{{areaobj.main.humidity}}%</p>
+          </div>
+        </div>
+
+        <p>場所を選択してね！</p>
+        <select name="area" v-model="cityname" id="form">
+          <option value="Osaka">大阪</option>
+          <option value="Akashi">明石</option>
+          <option value="Miyazaki">宮崎</option>
+          <option value="Mie">三重</option>
+          <option value="Onomichi">尾道</option>
+          <option value="Niigata">新潟</option>
+          <option value="Nagano">長野</option>
+          <option value="Saga">佐賀</option>
+          <option value="Nagoya">名古屋</option>
+          <option value="Okinawa">沖縄</option>
+          <option value="Nagasaki">長崎</option>
+          <option value="Miyazaki">宮崎</option>
+        </select>
+        <a href="#!" class="example" @click="getProgramList()">変更</a>
+      </div>
+      <div id="weatherData">
+        <div v-for="(val,prop) of data">
+          <p>
+            <span class="large">{{formatRelativeDate(prop)}} </span
+            >{{formatDateWithDay(prop)}}
+          </p>
+          <table border="1">
+            <tr v-for="v of val">
+              <td>{{v.shorttime}}</td>
+              <td>
+                <div v-if="v.main=='Clear'">
+                  <p>{{v.desc}}</p>
+                  <img src="./img/sun.png" />
+                </div>
+                <div v-else-if="v.main=='Clouds'">
+                  <p>{{v.desc}}</p>
+                  <img src="./img/cloud.png" />
+                </div>
+                <div v-else-if="v.main=='Rain'">
+                  <p>{{v.desc}}</p>
+                  <img src="./img/rain.png" />
+                </div>
+                <div v-else-if="v.main=='Snow'">
+                  <p>{{v.desc}}</p>
+                  <img src="./img/snow.png" />
+                </div>
+              </td>
+              <td>気温：{{formatTempl(v.temp)}}</td>
+              <td>湿度：{{v.humid}}%</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <footer>
+        <a @click="scrollToTop" id="pageTopBtn"></a>
+      </footer>
+    </main>
+  </body>
+</html>
